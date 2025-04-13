@@ -23,9 +23,9 @@ st.markdown("""
             color: #00FF66;
             padding: 1.2rem;
             border-radius: 12px;
-            font-size: 30px;
+            font-size: 50px;
             text-align: center;
-            font-weight: 600;
+            font-weight: 6000;
             margin-bottom: 25px;
             box-shadow: 0 0 20px rgba(0, 255, 102, 0.4);
             text-shadow: 0 0 10px rgba(0, 255, 102, 0.6);
@@ -127,7 +127,6 @@ def load_model():
         if os.path.exists(model_path):
             with open(model_path, 'rb') as f:
                 model = pickle.load(f)
-            st.sidebar.success("✅ Model loaded successfully!")
             return model
         else:
             st.sidebar.error(f"❌ Model file not found at: {model_path}")
@@ -335,7 +334,6 @@ def get_traffic_level(hour, day_of_week):
 # ---------- Page Content ----------
 if st.session_state.page == "home":
     st.markdown('<div class="main-title"> ETAnalyst </div>', unsafe_allow_html=True)
-
     st.markdown('<div class="section-title">📁 Upload Travel Dataset (Optional)</div>', unsafe_allow_html=True)
     uploaded_file = st.file_uploader("Upload a CSV file with travel data", type=["csv"])
 
@@ -358,7 +356,7 @@ if st.session_state.page == "home":
 
         if input_method == "Place Names":
             with col1:
-                st.markdown('<div class="input-card">', unsafe_allow_html=True)
+                
                 st.subheader("Start Location")
                 start_place = st.text_input("Enter Start Place Name", value="MG Road, Bangalore")
                 if st.button("Geocode Start Address"):
@@ -383,7 +381,7 @@ if st.session_state.page == "home":
                 st.markdown('</div>', unsafe_allow_html=True)
 
             with col2:
-                st.markdown('<div class="input-card">', unsafe_allow_html=True)
+
                 st.subheader("End Location")
                 end_place = st.text_input("Enter End Place Name", value="Electronic City, Bangalore")
                 if st.button("Geocode End Address"):
@@ -408,7 +406,7 @@ if st.session_state.page == "home":
                 st.markdown('</div>', unsafe_allow_html=True)
         else:  # Coordinates
             with col1:
-                st.markdown('<div class="input-card">', unsafe_allow_html=True)
+
                 st.subheader("Start Location")
                 start_lat = st.number_input("Latitude", value=12.9716, format="%.6f")
                 start_long = st.number_input("Longitude", value=77.5946, format="%.6f")
@@ -417,7 +415,7 @@ if st.session_state.page == "home":
                 st.markdown('</div>', unsafe_allow_html=True)
 
             with col2:
-                st.markdown('<div class="input-card">', unsafe_allow_html=True)
+
                 st.subheader("End Location")
                 end_lat = st.number_input("Latitude ", value=12.9352, format="%.6f")
                 end_long = st.number_input("Longitude ", value=77.6146, format="%.6f")
@@ -528,13 +526,13 @@ if st.session_state.page == "home":
                 # Display results
                 col1, col2 = st.columns(2)
                 with col1:
-                    st.markdown('<div class="input-card">', unsafe_allow_html=True)
+
                     st.success(f"🕒 Estimated Time of Arrival: **{predicted_minutes:.1f} minutes**")
                     st.write(f"⏰ Expected Arrival Time: **{arrival_time.strftime('%I:%M %p')}**")
                     st.markdown('</div>', unsafe_allow_html=True)
 
                 with col2:
-                    st.markdown('<div class="input-card">', unsafe_allow_html=True)
+
                     st.write(f"📏 Distance: **{distance_km:.2f} km**")
                     if eta_api:
                         st.write(f"🎯 Ola API ETA: **{eta_api:.1f} minutes**")
