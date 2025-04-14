@@ -61,3 +61,4 @@ blinker~=1.7.0
 jsonschema-specifications~=2024.10.1
 cycler~=0.12.1
 kiwisolver~=1.4.8
+streamlit_folium~=0.12.0
