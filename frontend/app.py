@@ -356,7 +356,7 @@ if st.session_state.page == "home":
 
         if input_method == "Place Names":
             with col1:
-                
+
                 st.subheader("Start Location")
                 start_place = st.text_input("Enter Start Place Name", value="MG Road, Bangalore")
                 if st.button("Geocode Start Address"):
