@@ -8,6 +8,10 @@ import os
 import math
 import folium
 from streamlit_folium import folium_static
+import pytz  # Added pytz for timezone handling
+
+# ---------- Define Application Timezone ----------
+APP_TIMEZONE = pytz.timezone('Asia/Kolkata')  # Set to Bangalore timezone
 
 # ---------- Page Setup ----------
 st.set_page_config(page_title="ETA Prediction Dashboard", layout="wide")
@@ -448,10 +452,12 @@ if st.session_state.page == "home":
 
             # Initialize time in session state if not present
             if 'selected_time' not in st.session_state:
-                st.session_state.selected_time = datetime.now().time()
+                # Use timezone-aware datetime
+                st.session_state.selected_time = datetime.now(APP_TIMEZONE).time()
 
             if time_input_method == "Current Time":
-                current_datetime = datetime.now()
+                # Use timezone-aware current datetime
+                current_datetime = datetime.now(APP_TIMEZONE)
                 travel_time = current_datetime.time()
                 st.session_state.selected_time = travel_time
                 st.write(f"Current Time: {travel_time.strftime('%I:%M %p')}")
@@ -468,11 +474,12 @@ if st.session_state.page == "home":
         with col1:
             if time_input_method == "Custom Time":
                 day_of_week = st.selectbox("Day of the Week",
-                                       ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"])
+                                           ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday",
+                                            "Sunday"])
             else:
                 st.write("Day of the Week")
                 st.info(day_of_week)
-            
+
             is_weekday = 1 if day_of_week in ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"] else 0
 
         with col3:
@@ -520,8 +527,16 @@ if st.session_state.page == "home":
                 # Make prediction
                 predicted_minutes = model.predict(input_data)[0]
                 predicted_eta = f"{predicted_minutes:.2f} minutes"
-                arrival_time = (datetime.combine(datetime.today(), travel_time) + timedelta(
-                    minutes=predicted_minutes)).time()
+
+                # Use timezone-aware datetime for arrival time calculation
+                today = datetime.now(APP_TIMEZONE).date()
+                # Create a datetime object combining today's date with the travel time
+                base_datetime = datetime.combine(today, travel_time)
+                # Make it timezone-aware
+                base_datetime = APP_TIMEZONE.localize(base_datetime) if base_datetime.tzinfo is None else base_datetime
+                # Add the predicted minutes to get arrival time
+                arrival_datetime = base_datetime + timedelta(minutes=predicted_minutes)
+                arrival_time = arrival_datetime.time()
 
                 # Display results
                 col1, col2 = st.columns(2)
